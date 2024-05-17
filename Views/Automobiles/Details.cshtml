@@ -1,0 +1,46 @@
+﻿@model DetailingCenterApp.Models.Automobile
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Подробная информация</h1>
+
+<div>
+    <h4>Автомобиль</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Mark)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Mark)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Model)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Model)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Gosnumber)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Gosnumber)
+        </dd>
+        <dt class = "col-sm-2">
+            @* @Html.DisplayNameFor(model => model.Client) *@
+            Владелец
+        </dt>
+        <dd class = "col-sm-10">
+            @* @Html.DisplayFor(model => model.Client.ClientID) *@
+            @Html.DisplayFor(model => model.Client.Surname)
+            @Html.DisplayFor(model => model.Client.Name)
+            @Html.DisplayFor(model => model.Client.Patronym)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.AutomobileID">Изменить</a> |
+    <a asp-action="Index">Назад к списку</a>
+</div>
