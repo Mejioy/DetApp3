@@ -3,55 +3,62 @@
 @{
     ViewData["Title"] = "Список";
 }
+@if (User.IsInRole("employer"))
+{
+    <h1>Автомобили</h1>
 
-<h1>Автомобили</h1>
-
-<p>
-    <a asp-action="Create">Добавление</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Mark)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Model)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Gosnumber)
-            </th>
-            <th>
-                Владелец
-                @* @Html.DisplayNameFor(model => model.Client) *@
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mark)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gosnumber)
-            </td>
-            <td>
-                @* @Html.DisplayFor(modelItem => item.Client.ClientID) *@
-                    @Html.DisplayFor(modelItem => item.Client.Surname)
-                    @Html.DisplayFor(modelItem => item.Client.Name)
-                    @Html.DisplayFor(modelItem => item.Client.Patronym)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.AutomobileID">Изменить</a> |
-                <a asp-action="Details" asp-route-id="@item.AutomobileID">Подробнее</a> |
-                <a asp-action="Delete" asp-route-id="@item.AutomobileID">Удалить</a>
-            </td>
-        </tr>
+    <p>
+        <a asp-action="Create">Добавление</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mark)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Model)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Gosnumber)
+                </th>
+                <th>
+                    Владелец
+                    @* @Html.DisplayNameFor(model => model.Client) *@
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mark)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Model)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Gosnumber)
+                    </td>
+                    <td>
+                        @* @Html.DisplayFor(modelItem => item.Client.ClientID) *@
+                        @Html.DisplayFor(modelItem => item.Client.Surname)
+                        @Html.DisplayFor(modelItem => item.Client.Name)
+                        @Html.DisplayFor(modelItem => item.Client.Patronym)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.AutomobileID">Изменить</a> |
+                        <a asp-action="Details" asp-route-id="@item.AutomobileID">Подробнее</a> |
+                        <a asp-action="Delete" asp-route-id="@item.AutomobileID">Удалить</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
-    </tbody>
-</table>
+else
+{
+    <h1>Авторизованный пользователь не является сотрудником</h1>
+}

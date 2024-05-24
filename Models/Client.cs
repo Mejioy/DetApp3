@@ -15,6 +15,7 @@ namespace DetailingCenterApp.Models
         public string Patronym { get; set; }
         [DisplayName("Номер телефона")]
         [RegularExpression(@"^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$", ErrorMessage = "Неверно введён номер телефона. Необходимо ввести в следующем формате 8(888)888-88-88")]
-        public string Phone { get; set; }
+        public string Phone { get; set; }        
+        
     }
 }

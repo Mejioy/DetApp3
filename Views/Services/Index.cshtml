@@ -5,10 +5,11 @@
 }
 
 <h1>Услуги</h1>
-
-<p>
+@if (User.IsInRole("admin"))
+{
+    <p>
     <a asp-action="Create">Добавление</a>
-</p>
+</p>}
 <table class="table">
     <thead>
         <tr>
@@ -42,11 +43,20 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ServiceID">Изменить</a> |
-                <a asp-action="Details" asp-route-id="@item.ServiceID">Подробнее</a> |
-                <a asp-action="Delete" asp-route-id="@item.ServiceID">Удалить</a>
-            </td>
+                @if (User.IsInRole("admin"))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ServiceID">Изменить</a> |
+                        <a asp-action="Details" asp-route-id="@item.ServiceID">Подробнее</a> |                    
+                        <a asp-action="Delete" asp-route-id="@item.ServiceID">Удалить</a>                    
+                    </td>
+                }
+                else if (!User.IsInRole("admin"))
+                {
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.ServiceID">Подробнее</a> 
+                    </td>
+                }
         </tr>
 }
     </tbody>

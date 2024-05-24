@@ -53,9 +53,23 @@ namespace DetApp3.Controllers
         // GET: ProvidedServices/Create
         public IActionResult Create()
         {
-            ViewData["AutomobileId"] = new SelectList(_context.Automobiles, "AutomobileID", "AutomobileID");
-            ViewData["EmployerId"] = new SelectList(_context.Employers, "EmployerID", "EmployerID");
-            ViewData["ServiceId"] = new SelectList(_context.Services, "ServiceID", "ServiceID");
+            var automobiles = _context.Automobiles
+        .Select(c => new
+        {
+            c.AutomobileID,
+            DisplayValue = c.Mark + ' ' + c.Model + ' ' + c.Gosnumber
+        })
+        .ToList();
+            var employers = _context.Employers
+        .Select(c => new
+        {
+            c.EmployerID,
+            DisplayValue = c.Surname + ' ' + c.Name + ' ' + c.Patronym
+        })
+        .ToList();            
+            ViewData["AutomobileId"] = new SelectList(automobiles, "AutomobileID", "DisplayValue");
+            ViewData["EmployerId"] = new SelectList(employers, "EmployerID", "DisplayValue");
+            ViewData["ServiceId"] = new SelectList(_context.Services, "ServiceID", "Servicename");
             return View();
         }
 
@@ -91,9 +105,23 @@ namespace DetApp3.Controllers
             {
                 return NotFound();
             }
-            ViewData["AutomobileId"] = new SelectList(_context.Automobiles, "AutomobileID", "AutomobileID", providedService.AutomobileId);
-            ViewData["EmployerId"] = new SelectList(_context.Employers, "EmployerID", "EmployerID", providedService.EmployerId);
-            ViewData["ServiceId"] = new SelectList(_context.Services, "ServiceID", "ServiceID", providedService.ServiceId);
+            var automobiles = _context.Automobiles
+        .Select(c => new
+        {
+            c.AutomobileID,
+            DisplayValue = c.Mark + ' ' + c.Model + ' ' + c.Gosnumber
+        })
+        .ToList();
+            var employers = _context.Employers
+        .Select(c => new
+        {
+            c.EmployerID,
+            DisplayValue = c.Surname + ' ' + c.Name + ' ' + c.Patronym
+        })
+        .ToList();
+            ViewData["AutomobileId"] = new SelectList(automobiles, "AutomobileID", "DisplayValue", providedService.AutomobileId);
+            ViewData["EmployerId"] = new SelectList(employers, "EmployerID", "DisplayValue", providedService.EmployerId);
+            ViewData["ServiceId"] = new SelectList(_context.Services, "ServiceID", "Servicename", providedService.ServiceId);
             return View(providedService);
         }
 

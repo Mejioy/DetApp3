@@ -3,7 +3,8 @@
 @{
     ViewData["Title"] = "Изменение информации";
 }
-
+@if (User.IsInRole("employer"))
+{
 <h1>Изменение информации</h1>
 
 <h4>Оказанная услуга</h4>
@@ -14,17 +15,17 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ProvidedServiceID" />
             <div class="form-group">
-                <label asp-for="ServiceId" class="control-label"></label>
+                    <label asp-for="ServiceId" class="control-label">Услуга</label>
                 <select asp-for="ServiceId" class="form-control" asp-items="ViewBag.ServiceId"></select>
                 <span asp-validation-for="ServiceId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EmployerId" class="control-label"></label>
+                    <label asp-for="EmployerId" class="control-label">Сотрудник</label>
                 <select asp-for="EmployerId" class="form-control" asp-items="ViewBag.EmployerId"></select>
                 <span asp-validation-for="EmployerId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="AutomobileId" class="control-label"></label>
+                    <label asp-for="AutomobileId" class="control-label">Автомобиль</label>
                 <select asp-for="AutomobileId" class="form-control" asp-items="ViewBag.AutomobileId"></select>
                 <span asp-validation-for="AutomobileId" class="text-danger"></span>
             </div>
@@ -46,4 +47,9 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+}
+else
+{
+<h1>Авторизованный пользователь не является сотрудником</h1>
 }

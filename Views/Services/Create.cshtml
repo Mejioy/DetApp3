@@ -3,8 +3,9 @@
 @{
     ViewData["Title"] = "Добавление";
 }
-
-<h1>Добавление</h1>
+@if (User.IsInRole("admin"))
+{
+    <h1>Добавление</h1>
 
 <h4>Услуга</h4>
 <hr />
@@ -45,4 +46,9 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+}
+else
+{
+    <h1>Авторизованный пользователь не является администратором</h1>    
 }

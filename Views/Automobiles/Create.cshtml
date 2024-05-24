@@ -3,7 +3,8 @@
 @{
     ViewData["Title"] = "Добавление";
 }
-
+@if (User.IsInRole("employer"))
+{
 <h1>Добавление</h1>
 
 <h4>Автомобиль</h4>
@@ -28,8 +29,9 @@
                 <span asp-validation-for="Gosnumber" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ClientId" class="control-label"></label>
+                <label asp-for="ClientId" class="control-label">Владелец</label>
                 <select asp-for="ClientId" class="form-control" asp-items="ViewBag.ClientID"></select>
+                   
             </div>
             <div class="form-group">
                 <input type="submit" value="Добавить" class="btn btn-primary" />
@@ -44,4 +46,9 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+}
+else
+{
+<h1>Авторизованный пользователь не является сотрудником</h1>
 }

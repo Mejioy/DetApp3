@@ -49,7 +49,14 @@ namespace DetApp3.Controllers
         // GET: Automobiles/Create
         public IActionResult Create()
         {
-            ViewData["ClientId"] = new SelectList(_context.Clients, "ClientID", "ClientID");
+            var clients = _context.Clients
+        .Select(c => new
+        {
+            c.ClientID,
+            DisplayValue = c.Surname + ' ' + c.Name + ' ' + c.Patronym
+        })
+        .ToList();
+            ViewData["ClientId"] = new SelectList(clients, "ClientID", "DisplayValue");
             return View();
         }
 
@@ -83,7 +90,14 @@ namespace DetApp3.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "ClientID", "ClientID", automobile.ClientId);
+            var clients = _context.Clients
+        .Select(c => new
+        {
+            c.ClientID,
+            DisplayValue = c.Surname + ' ' + c.Name + ' ' + c.Patronym
+        })
+        .ToList();
+            ViewData["ClientId"] = new SelectList(clients, "ClientID", "DisplayValue", automobile.ClientId);
             return View(automobile);
         }
 
