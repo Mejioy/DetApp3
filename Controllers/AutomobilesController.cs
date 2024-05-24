@@ -6,16 +6,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DetailingCenterApp.Models;
+using OfficeOpenXml;
 
 namespace DetApp3.Controllers
 {
     public class AutomobilesController : Controller
     {
         private readonly DetailingCenterDBContext _context;
-
-        public AutomobilesController(DetailingCenterDBContext context)
+        private readonly IWebHostEnvironment _appEnvironment;
+        public AutomobilesController(DetailingCenterDBContext context, IWebHostEnvironment appEnvironment)
         {
             _context = context;
+            _appEnvironment = appEnvironment;
         }
 
         // GET: Automobiles
@@ -162,6 +164,71 @@ namespace DetApp3.Controllers
         private bool AutomobileExists(int id)
         {
           return (_context.Automobiles?.Any(e => e.AutomobileID == id)).GetValueOrDefault();
+        }
+        public FileResult GetReport(int id)
+        {
+            // Путь к файлу с шаблоном
+            string path = "/reports/providedserviceofauto-report.xlsx";
+            //Путь к файлу с результатом
+            string result = "/reports/providedservicesofauto/providedserviceofauto.xlsx";
+            FileInfo fi = new FileInfo(_appEnvironment.WebRootPath + path);
+            FileInfo fr = new FileInfo(_appEnvironment.WebRootPath + result);
+            //будем использовть библитотеку не для коммерческого использования
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            //открываем файл с шаблоном
+            using (ExcelPackage excelPackage = new ExcelPackage(fi))
+            {
+                //устанавливаем поля документа
+                excelPackage.Workbook.Properties.Author = "Кокурин Я. Д.";
+                excelPackage.Workbook.Properties.Title = "Список оказанных услуг";
+                excelPackage.Workbook.Properties.Subject = "Оказанные услуги";
+                excelPackage.Workbook.Properties.Created = DateTime.Now;
+                //плучаем лист по имени.
+                ExcelWorksheet worksheet =
+               excelPackage.Workbook.Worksheets["providedServices"];
+                //получаем списко пользователей и в цикле заполняем лист данными
+                Automobile auto = _context.Automobiles.Find(id);
+                worksheet.Cells[1, 2].Value = $"для автомобиля {auto.Mark} {auto.Model} {auto.Gosnumber}";
+                int startLine = 3;
+                List<ProvidedService> providedServices = _context.ProvidedServices.ToList();
+                List<ProvidedService> providedServicesOfAuto=new List<ProvidedService>();
+                foreach (ProvidedService providedService in providedServices)
+                {
+                    if(providedService.AutomobileId == id)
+                    {
+                        providedServicesOfAuto.Add(providedService);
+                    }
+                }
+                int sum = 0;
+                foreach (ProvidedService providedservice in providedServicesOfAuto)
+                {
+                    Service service = _context.Services.Find(providedservice.ServiceId);
+                    Employer employer = _context.Employers.Find(providedservice.EmployerId);
+                    worksheet.Cells[startLine, 1].Value = startLine - 2;
+                    worksheet.Cells[startLine, 2].Value = service.Servicename;
+                    //worksheet.Cells[startLine, 3].Value = client.Surname + ' ' + client.Name + ' ' + client.Patronym;
+                    //worksheet.Cells[startLine, 4].Value = automobile.Mark + ' ' + automobile.Model + ' ' + automobile.Gosnumber;
+                    worksheet.Cells[startLine, 3].Value = employer.Surname + ' ' + employer.Name + ' ' + employer.Patronym;
+                    worksheet.Cells[startLine, 4].Value = service.Price.ToString();
+                    sum += service.Price;
+                    //worksheet.Cells[startLine, 2].Value = providedservice.Service.Servicename;
+                    //worksheet.Cells[startLine, 3].Value = providedservice.Automobile.Client.Surname + ' ' + providedservice.Automobile.Client.Name + ' ' + providedservice.Automobile.Client.Patronym;
+                    //worksheet.Cells[startLine, 4].Value = providedservice.Automobile.Mark + ' ' + providedservice.Automobile.Model + ' ' + providedservice.Automobile.Gosnumber;
+                    //worksheet.Cells[startLine, 5].Value = providedservice.Employer.Surname + ' ' + providedservice.Employer.Name + ' ' + providedservice.Employer.Patronym;
+                    //worksheet.Cells[startLine, 6].Value = providedservice.Service.Price.ToString();
+                    worksheet.Cells[startLine, 5].Value = providedservice.dateTime.ToString();
+                    startLine++;
+                }
+                worksheet.Cells[startLine, 1].Value = "Стоимость:";
+                worksheet.Cells[startLine, 4].Value = sum.ToString();
+                //созраняем в новое место
+                excelPackage.SaveAs(fr);
+            }
+            // Тип файла - content-type
+            string file_type = "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet";
+            // Имя файла - необязательно
+            string file_name = "providedserviceofauto.xlsx";
+            return File(result, file_type, file_name);
         }
     }
 }

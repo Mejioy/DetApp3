@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DetailingCenterApp.Models;
+using OfficeOpenXml;
 
 namespace DetApp3.Controllers
 {
     public class ClientsController : Controller
     {
         private readonly DetailingCenterDBContext _context;
+        private readonly IWebHostEnvironment _appEnvironment;
 
-        public ClientsController(DetailingCenterDBContext context)
+        public ClientsController(DetailingCenterDBContext context, IWebHostEnvironment appEnvironment)
         {
             _context = context;
+            _appEnvironment = appEnvironment;
         }
 
         // GET: Clients
@@ -157,6 +160,55 @@ namespace DetApp3.Controllers
         private bool ClientExists(int id)
         {
           return (_context.Clients?.Any(e => e.ClientID == id)).GetValueOrDefault();
+        }
+        public FileResult GetReport(int id)
+        {
+            // Путь к файлу с шаблоном
+            string path = "/reports/automobileslistofclient-report.xlsx";
+            //Путь к файлу с результатом
+            string result = "/reports/automobilesofclient/carlist.xlsx";
+            FileInfo fi = new FileInfo(_appEnvironment.WebRootPath + path);
+            FileInfo fr = new FileInfo(_appEnvironment.WebRootPath + result);
+            //будем использовть библитотеку не для коммерческого использования
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            //открываем файл с шаблоном
+            using (ExcelPackage excelPackage = new ExcelPackage(fi))
+            {
+                //устанавливаем поля документа
+                excelPackage.Workbook.Properties.Author = "Кокурин Я. Д.";
+                excelPackage.Workbook.Properties.Title = "Список оказанных услуг";
+                excelPackage.Workbook.Properties.Subject = "Оказанные услуги";
+                excelPackage.Workbook.Properties.Created = DateTime.Now;
+                //плучаем лист по имени.
+                ExcelWorksheet worksheet =
+               excelPackage.Workbook.Worksheets["automobilesList"];
+                //получаем списко пользователей и в цикле заполняем лист данными
+                Client client = _context.Clients.Find(id);
+                worksheet.Cells[1, 2].Value = $"{client.Surname} {client.Name} {client.Patronym}";
+                int startLine = 3;
+                List<Automobile> automobiles = _context.Automobiles.ToList();
+                List<Automobile> automobilesOfClient = new List<Automobile>();
+                foreach (Automobile auto in automobiles)
+                {
+                    if(auto.ClientId==id)
+                        automobilesOfClient.Add(auto);
+                }
+                foreach (Automobile auto in automobilesOfClient)
+                {
+                    worksheet.Cells[startLine, 1].Value = startLine - 2;
+                    worksheet.Cells[startLine, 2].Value = auto.Mark;
+                    worksheet.Cells[startLine, 3].Value = auto.Model;
+                    worksheet.Cells[startLine, 4].Value = auto.Gosnumber;
+                    startLine++;
+                }                
+                //созраняем в новое место
+                excelPackage.SaveAs(fr);
+            }
+            // Тип файла - content-type
+            string file_type = "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet";
+            // Имя файла - необязательно
+            string file_name = "carlist.xlsx";
+            return File(result, file_type, file_name);
         }
     }
 }

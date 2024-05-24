@@ -129,7 +129,7 @@ namespace DetApp3.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Неправильный логин/пароль.");
                     return Page();
                 }
             }
