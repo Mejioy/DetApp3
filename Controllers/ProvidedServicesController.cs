@@ -236,20 +236,20 @@ namespace DetApp3.Controllers
                 List<ProvidedService> providedServices = _context.ProvidedServices.ToList();
                 foreach (ProvidedService providedservice in providedServices)
                 {                    
-                    Service service = _context.Services.Find(providedservice.ServiceId);
-                    Automobile automobile = _context.Automobiles.Find(providedservice.AutomobileId);
-                    Client client = _context.Clients.Find(automobile.AutomobileID);
-                    Employer employer = _context.Employers.Find(providedservice.EmployerId);                
+                    providedservice.Service = _context.Services.Find(providedservice.ServiceId);
+                    providedservice.Automobile = _context.Automobiles.Find(providedservice.AutomobileId);
+                    Client client = _context.Clients.Find(providedservice.Automobile.ClientId);
+                    providedservice.Employer = _context.Employers.Find(providedservice.EmployerId);                
                     worksheet.Cells[startLine, 1].Value = startLine - 2;
-                    worksheet.Cells[startLine, 2].Value = service.Servicename;
+                    worksheet.Cells[startLine, 2].Value = providedservice.Service.Servicename;
                     worksheet.Cells[startLine, 3].Value = client.Surname + ' ' + client.Name + ' ' + client.Patronym;
-                    worksheet.Cells[startLine, 4].Value = automobile.Mark + ' ' + automobile.Model + ' ' + automobile.Gosnumber;
-                    worksheet.Cells[startLine, 5].Value = employer.Surname + ' ' + employer.Name + ' ' + employer.Patronym;
-                    worksheet.Cells[startLine, 6].Value = service.Price.ToString();
-                    sum+=service.Price;
+                  
+                    worksheet.Cells[startLine, 4].Value = providedservice.Automobile.Mark + ' ' + providedservice.Automobile.Model + ' ' + providedservice.Automobile.Gosnumber;
+                    worksheet.Cells[startLine, 5].Value = providedservice.Employer.Surname + ' ' + providedservice.Employer.Name + ' ' + providedservice.Employer.Patronym;
+                    worksheet.Cells[startLine, 6].Value = providedservice.Service.Price.ToString();
+                    sum+=providedservice.Service.Price;
                     worksheet.Cells[startLine, 7].Value = providedservice.dateTime.ToString();
-                    startLine++;worksheet.Cells[startLine, 1].Value = "Выручка:";
-                worksheet.Cells[startLine, 6].Value = sum.ToString();
+                    startLine++;
                 }
                 worksheet.Cells[startLine, 1].Value = "Выручка:";
                 worksheet.Cells[startLine, 6].Value = sum.ToString();

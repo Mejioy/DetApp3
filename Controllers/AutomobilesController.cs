@@ -218,20 +218,13 @@ namespace DetApp3.Controllers
                 int sum = 0;
                 foreach (ProvidedService providedservice in providedServicesOfAuto)
                 {
-                    Service service = _context.Services.Find(providedservice.ServiceId);
-                    Employer employer = _context.Employers.Find(providedservice.EmployerId);
+                    providedservice.Service = _context.Services.Find(providedservice.ServiceId);
+                    providedservice.Employer = _context.Employers.Find(providedservice.EmployerId);
                     worksheet.Cells[startLine, 1].Value = startLine - 2;
-                    worksheet.Cells[startLine, 2].Value = service.Servicename;
-                    //worksheet.Cells[startLine, 3].Value = client.Surname + ' ' + client.Name + ' ' + client.Patronym;
-                    //worksheet.Cells[startLine, 4].Value = automobile.Mark + ' ' + automobile.Model + ' ' + automobile.Gosnumber;
-                    worksheet.Cells[startLine, 3].Value = employer.Surname + ' ' + employer.Name + ' ' + employer.Patronym;
-                    worksheet.Cells[startLine, 4].Value = service.Price.ToString();
-                    sum += service.Price;
-                    //worksheet.Cells[startLine, 2].Value = providedservice.Service.Servicename;
-                    //worksheet.Cells[startLine, 3].Value = providedservice.Automobile.Client.Surname + ' ' + providedservice.Automobile.Client.Name + ' ' + providedservice.Automobile.Client.Patronym;
-                    //worksheet.Cells[startLine, 4].Value = providedservice.Automobile.Mark + ' ' + providedservice.Automobile.Model + ' ' + providedservice.Automobile.Gosnumber;
-                    //worksheet.Cells[startLine, 5].Value = providedservice.Employer.Surname + ' ' + providedservice.Employer.Name + ' ' + providedservice.Employer.Patronym;
-                    //worksheet.Cells[startLine, 6].Value = providedservice.Service.Price.ToString();
+                    worksheet.Cells[startLine, 2].Value = providedservice.Service.Servicename;
+                    worksheet.Cells[startLine, 3].Value = providedservice.Employer.Surname + ' ' + providedservice.Employer.Name + ' ' + providedservice.Employer.Patronym;
+                    worksheet.Cells[startLine, 4].Value = providedservice.Service.Price.ToString();
+                    sum += providedservice.Service.Price;
                     worksheet.Cells[startLine, 5].Value = providedservice.dateTime.ToString();
                     startLine++;
                 }
