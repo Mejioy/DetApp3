@@ -3,8 +3,7 @@
 @{
     ViewData["Title"] = "Список";
 }
-@if (User.IsInRole("employer"))
-{
+
 <h1>Оказанные услуги</h1>
 
 <p>
@@ -37,18 +36,15 @@
             <td>
                 @Html.DisplayFor(modelItem => item.dateTime)
             </td>
-            <td>
-                @* @Html.DisplayFor(modelItem => item.Service.ServiceID) *@
+            <td>                
                     @Html.DisplayFor(modelItem => item.Service.Servicename)
             </td>
-            <td>
-                @* @Html.DisplayFor(modelItem => item.Employer.EmployerID) *@
+            <td>                
                     @Html.DisplayFor(modelItem => item.Employer.Surname)
                     @Html.DisplayFor(modelItem => item.Employer.Name)
                     @Html.DisplayFor(modelItem => item.Employer.Patronym)
             </td>
-            <td>
-                @* @Html.DisplayFor(modelItem => item.Automobile.AutomobileID) *@
+            <td>                
                     @Html.DisplayFor(modelItem => item.Automobile.Mark)
                     @Html.DisplayFor(modelItem => item.Automobile.Model)
                     @Html.DisplayFor(modelItem => item.Automobile.Gosnumber)
@@ -65,8 +61,3 @@
         </div>
     </tbody>
 </table>
-}
-else
-{
-<h1>Авторизованный пользователь не является сотрудником</h1>
-}

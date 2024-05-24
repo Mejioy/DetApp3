@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DetailingCenterApp.Models;
 using OfficeOpenXml;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DetApp3.Controllers
 {
+    [Authorize(Roles = "employer")]
     public class ClientsController : Controller
     {
         private readonly DetailingCenterDBContext _context;

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DetailingCenterApp.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DetApp3.Controllers
 {
@@ -43,13 +44,13 @@ namespace DetApp3.Controllers
 
             return View(service);
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Services/Create
         public IActionResult Create()
         {
             return View();
         }
-
+        [Authorize(Roles = "admin")]
         // POST: Services/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -65,7 +66,7 @@ namespace DetApp3.Controllers
             }
             return View(service);
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Services/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -81,7 +82,7 @@ namespace DetApp3.Controllers
             }
             return View(service);
         }
-
+        [Authorize(Roles = "admin")]
         // POST: Services/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -116,7 +117,7 @@ namespace DetApp3.Controllers
             }
             return View(service);
         }
-
+        [Authorize(Roles = "admin")]
         // GET: Services/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -134,7 +135,7 @@ namespace DetApp3.Controllers
 
             return View(service);
         }
-
+        [Authorize(Roles = "admin")]
         // POST: Services/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

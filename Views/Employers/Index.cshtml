@@ -3,83 +3,76 @@
 @{
     ViewData["Title"] = "Список";
 }
-@if (User.IsInRole("admin"))
-{
-    <h1>Сотрудники</h1>
 
-    <p>
-        <a asp-action="Create">Добавление</a>    
-    </p>
-    <table class="table">
-        <thead>
+<h1>Сотрудники</h1>
+
+<p>
+    <a asp-action="Create">Добавление</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Patronym)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Street)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Housenumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Appartmentnumber)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Surname)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Patronym)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Phone)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.City)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Street)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Housenumber)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Appartmentnumber)
-                </th>
-                <th></th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Patronym)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Street)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Housenumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Appartmentnumber)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.EmployerID">Изменить</a> |
+                    <a asp-action="Details" asp-route-id="@item.EmployerID">Подробнее</a> |
+                    <a asp-action="Delete" asp-route-id="@item.EmployerID">Удалить</a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Surname)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Patronym)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Phone)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.City)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Street)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Housenumber)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Appartmentnumber)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.EmployerID">Изменить</a> |
-                        <a asp-action="Details" asp-route-id="@item.EmployerID">Подробнее</a> |
-                        <a asp-action="Delete" asp-route-id="@item.EmployerID">Удалить</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <h1>Авторизованный пользователь не является администратором</h1>
-}
-
+        }
+    </tbody>
+</table>

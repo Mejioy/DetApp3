@@ -3,8 +3,6 @@
 @{
     ViewData["Title"] = "Удаление";
 }
-@if (User.IsInRole("employer"))
-{
 <h1>Удаление</h1>
 
 <h3>Вы действительно хотите удалить эту запись?</h3>
@@ -12,50 +10,45 @@
     <h4>Оказанная услуга</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.dateTime)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.dateTime)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @* @Html.DisplayNameFor(model => model.Service) *@
             Услуга
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @* @Html.DisplayFor(model => model.Service.ServiceID) *@
             @Html.DisplayFor(model => model.Service.Servicename)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @* @Html.DisplayNameFor(model => model.Employer) *@
             Сотрудник
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @* @Html.DisplayFor(model => model.Employer.EmployerID) *@
             @Html.DisplayFor(model => model.Employer.Surname)
             @Html.DisplayFor(model => model.Employer.Name)
             @Html.DisplayFor(model => model.Employer.Patronym)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @* @Html.DisplayNameFor(model => model.Automobile) *@
             Автомобиль
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @* @Html.DisplayFor(model => model.Automobile.AutomobileID) *@
             @Html.DisplayFor(model => model.Automobile.Mark)
             @Html.DisplayFor(model => model.Automobile.Model)
             @Html.DisplayFor(model => model.Automobile.Gosnumber)
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="ProvidedServiceID" />
         <input type="submit" value="Удалить" class="btn btn-danger" /> |
         <a asp-action="Index">Назад к списку</a>
     </form>
 </div>
-}
-else
-{
-<h1>Авторизованный пользователь не является сотрудником</h1>
-}

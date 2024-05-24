@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DetailingCenterApp.Models;
 using OfficeOpenXml;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DetApp3.Controllers
-{    
+{
+    [Authorize(Roles = "employer")]
     public class ProvidedServicesController : Controller
     {
        
@@ -245,11 +247,6 @@ namespace DetApp3.Controllers
                     worksheet.Cells[startLine, 5].Value = employer.Surname + ' ' + employer.Name + ' ' + employer.Patronym;
                     worksheet.Cells[startLine, 6].Value = service.Price.ToString();
                     sum+=service.Price;
-                    //worksheet.Cells[startLine, 2].Value = providedservice.Service.Servicename;
-                    //worksheet.Cells[startLine, 3].Value = providedservice.Automobile.Client.Surname + ' ' + providedservice.Automobile.Client.Name + ' ' + providedservice.Automobile.Client.Patronym;
-                    //worksheet.Cells[startLine, 4].Value = providedservice.Automobile.Mark + ' ' + providedservice.Automobile.Model + ' ' + providedservice.Automobile.Gosnumber;
-                    //worksheet.Cells[startLine, 5].Value = providedservice.Employer.Surname + ' ' + providedservice.Employer.Name + ' ' + providedservice.Employer.Patronym;
-                    //worksheet.Cells[startLine, 6].Value = providedservice.Service.Price.ToString();
                     worksheet.Cells[startLine, 7].Value = providedservice.dateTime.ToString();
                     startLine++;worksheet.Cells[startLine, 1].Value = "Выручка:";
                 worksheet.Cells[startLine, 6].Value = sum.ToString();

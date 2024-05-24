@@ -10,9 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using DetailingCenterApp.Models;
 using System.Numerics;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DetApp3.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class EmployersController : Controller
     {
 
