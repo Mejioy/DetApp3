@@ -195,14 +195,58 @@ namespace DetApp3.Controllers
                     if(auto.ClientId==id)
                         automobilesOfClient.Add(auto);
                 }
+                //stablebreak
+                int autocount = 1;
                 foreach (Automobile auto in automobilesOfClient)
                 {
-                    worksheet.Cells[startLine, 1].Value = startLine - 2;
+                    worksheet.Cells[startLine, 1].Value = autocount;
                     worksheet.Cells[startLine, 2].Value = auto.Mark;
                     worksheet.Cells[startLine, 3].Value = auto.Model;
                     worksheet.Cells[startLine, 4].Value = auto.Gosnumber;
                     startLine++;
-                }                
+                    autocount++;
+                }
+
+
+
+                List<ProvidedService> providedServices = _context.ProvidedServices.ToList();
+                int globalsum = 0;
+                foreach (Automobile auto in automobilesOfClient)
+                {
+                    worksheet.Cells[startLine, 1].Value = "Услуги для автомобиля ";
+                    worksheet.Cells[startLine, 2].Value = $"{auto.Mark} {auto.Model} {auto.Gosnumber}";
+                    startLine++;
+                    List<ProvidedService> providedServicesOfAuto = new List<ProvidedService>();
+                    foreach (ProvidedService providedService in providedServices)
+                    {
+                        if (providedService.AutomobileId == auto.AutomobileID)
+                        {
+                            providedServicesOfAuto.Add(providedService);
+                        }
+                    }
+                    int sum = 0;
+                    int servicecount = 1;
+                    foreach (ProvidedService providedservice in providedServicesOfAuto)
+                    {                        
+                        providedservice.Service = _context.Services.Find(providedservice.ServiceId);
+                        providedservice.Employer = _context.Employers.Find(providedservice.EmployerId);
+                        worksheet.Cells[startLine, 1].Value = servicecount;
+                        worksheet.Cells[startLine, 2].Value = providedservice.Service.Servicename;
+                        worksheet.Cells[startLine, 3].Value = providedservice.Employer.Surname + ' ' + providedservice.Employer.Name + ' ' + providedservice.Employer.Patronym;
+                        worksheet.Cells[startLine, 4].Value = providedservice.Service.Price.ToString();
+                        sum += providedservice.Service.Price;
+                        worksheet.Cells[startLine, 5].Value = providedservice.dateTime.ToString();
+                        startLine++;
+                        servicecount++;
+                    }
+                    worksheet.Cells[startLine, 1].Value = "Стоимость услуг для автомобиля ";
+                    worksheet.Cells[startLine, 2].Value = $"{auto.Mark} {auto.Model} {auto.Gosnumber}";
+                    worksheet.Cells[startLine, 4].Value = sum.ToString();
+                    startLine += 2;
+                    globalsum += sum;
+                }
+                worksheet.Cells[startLine, 1].Value = "Общие затраты ";
+                worksheet.Cells[startLine, 2].Value = $"{globalsum}";
                 //созраняем в новое место
                 excelPackage.SaveAs(fr);
             }
