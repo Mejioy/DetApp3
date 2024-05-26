@@ -234,25 +234,48 @@ namespace DetApp3.Controllers
                 //получаем списко пользователей и в цикле заполняем лист данными
                 int startLine = 3;
                 List<ProvidedService> providedServices = _context.ProvidedServices.ToList();
+                Dictionary<string, int> pSDict = new Dictionary<string, int>();
                 foreach (ProvidedService providedservice in providedServices)
-                {                    
+                {                      
                     providedservice.Service = _context.Services.Find(providedservice.ServiceId);
                     providedservice.Automobile = _context.Automobiles.Find(providedservice.AutomobileId);
                     Client client = _context.Clients.Find(providedservice.Automobile.ClientId);
                     providedservice.Employer = _context.Employers.Find(providedservice.EmployerId);                
                     worksheet.Cells[startLine, 1].Value = startLine - 2;
                     worksheet.Cells[startLine, 2].Value = providedservice.Service.Servicename;
-                    worksheet.Cells[startLine, 3].Value = client.Surname + ' ' + client.Name + ' ' + client.Patronym;
-                  
+                    worksheet.Cells[startLine, 3].Value = client.Surname + ' ' + client.Name + ' ' + client.Patronym;                  
                     worksheet.Cells[startLine, 4].Value = providedservice.Automobile.Mark + ' ' + providedservice.Automobile.Model + ' ' + providedservice.Automobile.Gosnumber;
                     worksheet.Cells[startLine, 5].Value = providedservice.Employer.Surname + ' ' + providedservice.Employer.Name + ' ' + providedservice.Employer.Patronym;
                     worksheet.Cells[startLine, 6].Value = providedservice.Service.Price.ToString();
                     sum+=providedservice.Service.Price;
                     worksheet.Cells[startLine, 7].Value = providedservice.dateTime.ToString();
                     startLine++;
-                }
+                    if (pSDict.ContainsKey(providedservice.Service.Servicename))
+                    {                        
+                        pSDict.TryGetValue(providedservice.Service.Servicename,out int V);
+                        pSDict[providedservice.Service.Servicename] = V+1;
+                    }
+                    else
+                        pSDict.Add(providedservice.Service.Servicename, 1);
+                }                
                 worksheet.Cells[startLine, 1].Value = "Выручка:";
                 worksheet.Cells[startLine, 6].Value = sum.ToString();
+                startLine += 2;
+                
+                worksheet.Cells[startLine++, 1].Value = "Запрашиваемость услуг:";
+                worksheet.Cells[startLine, 2].Value = "Название услуги";
+                worksheet.Cells[startLine++, 3].Value = "Количество заказов";
+                int provcount = 1;                
+                pSDict = pSDict.OrderByDescending(pair => pair.Value).ToDictionary(pair => pair.Key, pair => pair.Value);
+                foreach (var item in pSDict)
+                {
+                    worksheet.Cells[startLine, 1].Value = provcount.ToString();
+                    worksheet.Cells[startLine, 2].Value = item.Key;
+                    worksheet.Cells[startLine, 3].Value = item.Value.ToString();
+                    //Console.WriteLine("{0} - {1}", pair.Key, pair.Value);
+                    startLine++;
+                    provcount++;
+                }
                 //созраняем в новое место
                 excelPackage.SaveAs(fr);
             }            
